@@ -6,5 +6,6 @@ RUN npm install --production --silent && mv node_modules ../
 COPY . .
 EXPOSE 5000
 RUN chown -R node /usr/src/app
+RUN chown -R node /usr/src/node_modules/prisma && chown -R node /usr/src/node_modules/.prisma
 USER node
 CMD ["npm", "run", "start:dev"]
