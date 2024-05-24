@@ -1,13 +1,13 @@
+import Room from './entities/room.entity';
 import { Injectable } from '@nestjs/common';
-import RoomParameters from './entities/room-parameters.entity';
+import { FindRoomsDTO } from './dto/find-room.dto';
 
 @Injectable()
 export class FindRoomsService {
-  private exampleRooms = [
+  // THIS ARRAY MUST BE DELETED AFTER ADDING DATABASE
+  private exampleRooms: Room[] = [
     {
       id: 1,
-      Hotel: {},
-      hotelId: 3,
       price: 100,
       guests: 3,
       hasWifi: false,
@@ -18,8 +18,6 @@ export class FindRoomsService {
     },
     {
       id: 2,
-      Hotel: {},
-      hotelId: 4,
       price: 100500,
       guests: 5,
       hasWifi: true,
@@ -30,37 +28,28 @@ export class FindRoomsService {
     },
   ];
 
-  findAll(): string {
-    return JSON.stringify(this.exampleRooms);
+  async findAll(): Promise<Room[]> {
+    // THIS CODE MUST BE REPLACED WITH SQL QUERY TO RECIEVE ROOMS
+    // FROM DATABASE
+    return this.exampleRooms;
   }
 
-  filterRooms(query: RoomParameters): string {
-    const filterObject = {};
-
-    for (const key in query) {
-      const val = Number.parseInt(query[key]);
-      if (!Number.isNaN(val) && val > 0) {
-        filterObject[key] = val;
-      } else {
-        if (query[key].toLowerCase() === 'true') {
-          filterObject[key] = true;
-        } else if (query[key].toLowerCase() === 'false') {
-          filterObject[key] = false;
-        }
-      }
-    }
-
+  async filterRooms(findRoomsDTO: FindRoomsDTO): Promise<Room[]> {
+    // filter rooms
+    // THIS CODE MUST BE REPLACED WITH SQL QUERY TO RECIEVE ROOMS
+    // FROM DATABASE
     const filteredRooms = this.exampleRooms.filter((room) => {
-      return Object.keys(filterObject).every((key) => {
-        if (Array.isArray(filterObject[key])) {
-          return filterObject[key].includes(room[key]);
-        }
-        return room[key] === filterObject[key];
+      return Object.keys(findRoomsDTO).every((key) => {
+        return room[key] === findRoomsDTO[key];
       });
     });
 
-    return filteredRooms.length >= 1
-      ? JSON.stringify(filteredRooms)
-      : 'There are no room with specified parameters';
+    // sort filtered rooms if needed
+    const sortOrder: string = findRoomsDTO['priceSort'];
+
+    if (sortOrder !== undefined) {
+    }
+
+    return filteredRooms;
   }
 }
