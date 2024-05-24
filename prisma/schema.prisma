@@ -10,24 +10,35 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://root:root@postgres:5432/booking?schema=public"
 }
 
 model Hotel {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   title       String
   description String
-  image       String?
   rooms       Room[]
+  HotelImages HotelImages[]
+
+  @@map("hotels")
+}
+
+model HotelImages {
+  id      Int    @id @default(autoincrement())
+  url     String
+  Hotel   Hotel  @relation(fields: [hotelId], references: [id])
+  hotelId Int
+
+  @@map("hotel_images")
 }
 
 model Room {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  Hotel        Hotel?   @relation(fields: [hotelId], references: [id])
+  id           Int          @id @default(autoincrement())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  Hotel        Hotel?       @relation(fields: [hotelId], references: [id])
   hotelId      Int?
   // parameters
   price        Int
@@ -37,6 +48,18 @@ model Room {
   hasBar       Boolean
   hasShower    Boolean
   hasBreakfast Boolean
+  RoomImages   RoomImages[]
+
+  @@map("rooms")
+}
+
+model RoomImages {
+  id     Int    @id @default(autoincrement())
+  url    String
+  Room   Room   @relation(fields: [roomId], references: [id])
+  roomId Int
+
+  @@map("room_images")
 }
 
 // Optional
