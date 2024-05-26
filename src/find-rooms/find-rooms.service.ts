@@ -1,55 +1,64 @@
-import Room from './entities/room.entity';
 import { Injectable } from '@nestjs/common';
-import { FindRoomsDTO } from './dto/find-room.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FindRoomsService {
-  // THIS ARRAY MUST BE DELETED AFTER ADDING DATABASE
-  private exampleRooms: Room[] = [
-    {
-      id: 1,
-      price: 100,
-      guests: 3,
-      hasWifi: false,
-      hasParking: true,
-      hasBar: true,
-      hasShower: false,
-      hasBreakfast: true,
-    },
-    {
-      id: 2,
-      price: 100500,
-      guests: 5,
-      hasWifi: true,
-      hasParking: false,
-      hasBar: true,
-      hasShower: true,
-      hasBreakfast: false,
-    },
-  ];
+  constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<Room[]> {
-    // THIS CODE MUST BE REPLACED WITH SQL QUERY TO RECIEVE ROOMS
-    // FROM DATABASE
-    return this.exampleRooms;
+  /*
+   * Return all rooms
+   */
+  async findAll() {
+    const result = await this.prisma.room.findMany();
+    return { responce: result };
   }
 
-  async filterRooms(findRoomsDTO: FindRoomsDTO): Promise<Room[]> {
-    // filter rooms
-    // THIS CODE MUST BE REPLACED WITH SQL QUERY TO RECIEVE ROOMS
-    // FROM DATABASE
-    const filteredRooms = this.exampleRooms.filter((room) => {
-      return Object.keys(findRoomsDTO).every((key) => {
-        return room[key] === findRoomsDTO[key];
-      });
-    });
+  /*
+   * Return all rooms that match the conditions
+   */
+  async filterRooms(query) {
+    const result: any = {};
+    try {
+      const rooms = await this.prisma.room.findMany(
+        this.getFilterParamsFromQuery(query),
+      );
 
-    // sort filtered rooms if needed
-    const sortOrder: string = findRoomsDTO['priceSort'];
+      if (rooms.length === 0) {
+        result.responce = 'There are no rooms with specified parameters';
+      } else {
+        result.responce = rooms;
+      }
+    } catch (e) {
+      result.responce = 'Bad request';
+      result.error = e;
+    }
+    return result;
+  }
 
-    if (sortOrder !== undefined) {
+  getFilterParamsFromQuery(query) {
+    const where: any = {};
+    const orderBy: any = {};
+
+    for (const key in query) {
+      if (key === 'minPrice') {
+        where.price = {
+          gte: Number.parseInt(query.minPrice),
+          lte: Number.parseInt(query.maxPrice),
+        };
+      } else if (key === 'guests') {
+        where.guests = {
+          equals: Number.parseInt(query.guests),
+        };
+      } else if (key !== 'priceSortOrder') {
+        where[key] = query[key] === 'true' ? true : false;
+      } else {
+        orderBy.price = query.priceSortOrder === 'asc' ? 'asc' : 'desc';
+      }
     }
 
-    return filteredRooms;
+    return {
+      where,
+      orderBy: { price: orderBy.price },
+    };
   }
 }
