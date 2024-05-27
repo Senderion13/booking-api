@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import FindRoomsDTO from './dto/FindRooms.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -9,33 +10,23 @@ export class FindRoomsService {
    * Return all rooms
    */
   async findAll() {
-    const result = await this.prisma.room.findMany();
-    return { responce: result };
+    return await this.prisma.room.findMany();
   }
 
   /*
    * Return all rooms that match the conditions
    */
-  async filterRooms(query) {
-    const result: any = {};
+  async filterRooms(query: FindRoomsDTO) {
     try {
-      const rooms = await this.prisma.room.findMany(
+      return await this.prisma.room.findMany(
         this.getFilterParamsFromQuery(query),
       );
-
-      if (rooms.length === 0) {
-        result.responce = 'There are no rooms with specified parameters';
-      } else {
-        result.responce = rooms;
-      }
-    } catch (e) {
-      result.responce = 'Bad request';
-      result.error = e;
+    } catch {
+      throw new BadRequestException('Incorrect parameters');
     }
-    return result;
   }
 
-  getFilterParamsFromQuery(query) {
+  getFilterParamsFromQuery(query: FindRoomsDTO) {
     const where: any = {};
     const orderBy: any = {};
 
@@ -43,27 +34,21 @@ export class FindRoomsService {
       if (key === 'minPrice' || key === 'maxPrice') {
         where.price = {};
         if (query.minPrice) {
-          where.price.gte = Number(query.minPrice);
+          where.price.gte = query.minPrice;
         }
         if (query.maxPrice) {
-          where.price.lte = Number(query.maxPrice);
+          where.price.lte = query.maxPrice;
         }
-      } else if (key === 'maxPrice') {
-        where.price.lte = Number(query[key]);
-      } else if (key === 'guests') {
-        where.guests = {
-          equals: Number.parseInt(query[key]),
-        };
-      } else if (key.includes('has')) {
-        where[key] = query[key] === 'true' ? true : false;
       } else if (key === 'priceSortOrder') {
         orderBy.price = query[key] === 'asc' ? 'asc' : 'desc';
+      } else {
+        where[key] = query[key];
       }
     }
 
     return {
       where,
-      orderBy: { price: orderBy.price },
+      orderBy,
     };
   }
 }

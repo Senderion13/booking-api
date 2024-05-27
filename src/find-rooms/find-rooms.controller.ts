@@ -1,3 +1,4 @@
+import FindRoomsDTO from './dto/FindRooms.dto';
 import { FindRoomsService } from './find-rooms.service';
 import { Controller, Get, Query } from '@nestjs/common';
 
@@ -11,7 +12,7 @@ export class FindRoomsController {
   }
 
   @Get('filter')
-  async findRooms(@Query() query: any) {
+  async findRooms(@Query() query: FindRoomsDTO) {
     return await this.findRoomsService.filterRooms(query);
   }
 }
