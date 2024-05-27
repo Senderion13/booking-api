@@ -40,19 +40,24 @@ export class FindRoomsService {
     const orderBy: any = {};
 
     for (const key in query) {
-      if (key === 'minPrice') {
-        where.price = {
-          gte: Number.parseInt(query.minPrice),
-          lte: Number.parseInt(query.maxPrice),
-        };
+      if (key === 'minPrice' || key === 'maxPrice') {
+        where.price = {};
+        if (query.minPrice) {
+          where.price.gte = Number(query.minPrice);
+        }
+        if (query.maxPrice) {
+          where.price.lte = Number(query.maxPrice);
+        }
+      } else if (key === 'maxPrice') {
+        where.price.lte = Number(query[key]);
       } else if (key === 'guests') {
         where.guests = {
-          equals: Number.parseInt(query.guests),
+          equals: Number.parseInt(query[key]),
         };
-      } else if (key !== 'priceSortOrder') {
+      } else if (key.includes('has')) {
         where[key] = query[key] === 'true' ? true : false;
-      } else {
-        orderBy.price = query.priceSortOrder === 'asc' ? 'asc' : 'desc';
+      } else if (key === 'priceSortOrder') {
+        orderBy.price = query[key] === 'asc' ? 'asc' : 'desc';
       }
     }
 
