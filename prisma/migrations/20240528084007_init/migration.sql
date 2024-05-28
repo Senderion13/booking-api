@@ -4,6 +4,8 @@ CREATE TABLE "hotels" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
+    "rating" DOUBLE PRECISION NOT NULL,
+    "location" TEXT NOT NULL,
     "description" TEXT NOT NULL,
 
     CONSTRAINT "hotels_pkey" PRIMARY KEY ("id")
