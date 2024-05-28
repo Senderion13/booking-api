@@ -1,66 +1,54 @@
-import { Injectable } from '@nestjs/common';
-import RoomParameters from './entities/room-parameters.entity';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import FindRoomsDTO from './dto/FindRooms.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FindRoomsService {
-  private exampleRooms = [
-    {
-      id: 1,
-      Hotel: {},
-      hotelId: 3,
-      price: 100,
-      guests: 3,
-      hasWifi: false,
-      hasParking: true,
-      hasBar: true,
-      hasShower: false,
-      hasBreakfast: true,
-    },
-    {
-      id: 2,
-      Hotel: {},
-      hotelId: 4,
-      price: 100500,
-      guests: 5,
-      hasWifi: true,
-      hasParking: false,
-      hasBar: true,
-      hasShower: true,
-      hasBreakfast: false,
-    },
-  ];
+  constructor(private prisma: PrismaService) {}
 
-  findAll(): string {
-    return JSON.stringify(this.exampleRooms);
+  /*
+   * Return all rooms
+   */
+  async findAll() {
+    return await this.prisma.room.findMany();
   }
 
-  filterRooms(query: RoomParameters): string {
-    const filterObject = {};
+  /*
+   * Return all rooms that match the conditions
+   */
+  async filterRooms(query: FindRoomsDTO) {
+    try {
+      return await this.prisma.room.findMany(
+        this.getFilterParamsFromQuery(query),
+      );
+    } catch {
+      throw new BadRequestException('Incorrect parameters');
+    }
+  }
+
+  getFilterParamsFromQuery(query: FindRoomsDTO) {
+    const where: any = {};
+    const orderBy: any = {};
 
     for (const key in query) {
-      const val = Number.parseInt(query[key]);
-      if (!Number.isNaN(val) && val > 0) {
-        filterObject[key] = val;
-      } else {
-        if (query[key].toLowerCase() === 'true') {
-          filterObject[key] = true;
-        } else if (query[key].toLowerCase() === 'false') {
-          filterObject[key] = false;
+      if (key === 'minPrice' || key === 'maxPrice') {
+        where.price = {};
+        if (query.minPrice) {
+          where.price.gte = query.minPrice;
         }
+        if (query.maxPrice) {
+          where.price.lte = query.maxPrice;
+        }
+      } else if (key === 'priceSortOrder') {
+        orderBy.price = query[key] === 'asc' ? 'asc' : 'desc';
+      } else {
+        where[key] = query[key];
       }
     }
 
-    const filteredRooms = this.exampleRooms.filter((room) => {
-      return Object.keys(filterObject).every((key) => {
-        if (Array.isArray(filterObject[key])) {
-          return filterObject[key].includes(room[key]);
-        }
-        return room[key] === filterObject[key];
-      });
-    });
-
-    return filteredRooms.length >= 1
-      ? JSON.stringify(filteredRooms)
-      : 'There are no room with specified parameters';
+    return {
+      where,
+      orderBy,
+    };
   }
 }

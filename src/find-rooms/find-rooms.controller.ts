@@ -1,18 +1,18 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import FindRoomsDTO from './dto/FindRooms.dto';
 import { FindRoomsService } from './find-rooms.service';
+import { Controller, Get, Query } from '@nestjs/common';
 
 @Controller('rooms')
 export class FindRoomsController {
   constructor(private readonly findRoomsService: FindRoomsService) {}
 
   @Get('all')
-  findAll(): string {
-    return this.findRoomsService.findAll();
+  async findAll() {
+    return await this.findRoomsService.findAll();
   }
 
   @Get('filter')
-  findRooms(@Query() roomParams: any): string {
-    console.log(typeof roomParams);
-    return this.findRoomsService.filterRooms(roomParams);
+  async findRooms(@Query() query: FindRoomsDTO) {
+    return await this.findRoomsService.filterRooms(query);
   }
 }
