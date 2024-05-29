@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import FindHotelsDTO from './dto/FindHotels.dto';
 
 @Injectable()
 export class FindHotelsService {
@@ -15,8 +16,31 @@ export class FindHotelsService {
   /*
    * Return all rooms that match the conditions
    */
-  async filterHotels() {
-    // TODO: REPLACE THIS CODE
-    return await this.prisma.hotel.findMany();
+  async filterHotels(query: FindHotelsDTO) {
+    try {
+      return await this.prisma.hotel.findMany(
+        this.getFilterParamsFromQuery(query),
+      );
+    } catch {
+      throw new BadRequestException('Incorrect parameters');
+    }
+  }
+
+  getFilterParamsFromQuery(query: FindHotelsDTO) {
+    const where: any = {};
+    const orderBy: any = {};
+
+    for (const key in query) {
+      if (key === 'ratingSortOrder') {
+        orderBy.rating = query[key] === 'asc' ? 'asc' : 'desc';
+      } else {
+        where[key] = query[key];
+      }
+    }
+
+    return {
+      where,
+      orderBy,
+    };
   }
 }
