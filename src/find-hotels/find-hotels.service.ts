@@ -33,6 +33,9 @@ export class FindHotelsService {
     for (const key in query) {
       if (key === 'ratingSortOrder') {
         orderBy.rating = query[key] === 'asc' ? 'asc' : 'desc';
+      } else if (key === 'rating') {
+        where[key] = {};
+        where[key].gte = query[key];
       } else {
         where[key] = query[key];
       }
