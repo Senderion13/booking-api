@@ -6,5 +6,5 @@ export default class Hotel {
   rating: number;
   location: string;
   description: string;
-  imageUrl: string;
+  images: string[];
 }
