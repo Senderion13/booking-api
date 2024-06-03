@@ -18,9 +18,9 @@ async function main() {
       Couples in particular like the location – they rated it 9.5 for a two-person trip.`,
       HotelImages: {
         create: [
-          { url: 'localhost:5000/images/1-1.jpg' },
-          { url: 'localhost:5000/images/1-2.jpg' },
-          { url: 'localhost:5000/images/1-3.jpg' },
+          { url: '/images/1-1.jpg' },
+          { url: '/images/1-2.jpg' },
+          { url: '/images/1-3.jpg' },
         ],
       },
       rooms: {
@@ -79,9 +79,9 @@ async function main() {
       Couples in particular like the location – they rated it 9.2 for a two-person trip.`,
       HotelImages: {
         create: [
-          { url: 'localhost:5000/images/2-1.jpg' },
-          { url: 'localhost:5000/images/2-2.jpg' },
-          { url: 'localhost:5000/images/2-3.jpg' },
+          { url: '/images/2-1.jpg' },
+          { url: '/images/2-2.jpg' },
+          { url: '/images/2-3.jpg' },
         ],
       },
       rooms: {
@@ -144,9 +144,9 @@ async function main() {
       Couples in particular like the location – they rated it 9.4 for a two-person trip.`,
       HotelImages: {
         create: [
-          { url: 'localhost:5000/images/3-1.jpg' },
-          { url: 'localhost:5000/images/3-2.jpg' },
-          { url: 'localhost:5000/images/3-3.jpg' },
+          { url: '/images/3-1.jpg' },
+          { url: '/images/3-2.jpg' },
+          { url: '/images/3-3.jpg' },
         ],
       },
       rooms: {
@@ -203,9 +203,9 @@ async function main() {
       Ideally located in the heart of the16th arrondissement of Paris, the hotel is only a 45-minute drive from Charles de Gaulle airport. It is close to several metro stations with connections to Lines 1 and 2 and RER line C providing good access to the city's top tourist attractions.`,
       HotelImages: {
         create: [
-          { url: 'localhost:5000/images/4-1.jpg' },
-          { url: 'localhost:5000/images/4-2.jpg' },
-          { url: 'localhost:5000/images/4-3.jpg' },
+          { url: '/images/4-1.jpg' },
+          { url: '/images/4-2.jpg' },
+          { url: '/images/4-3.jpg' },
         ],
       },
       rooms: {
@@ -264,9 +264,9 @@ async function main() {
       Sassenpoort is 30 miles from Casaprisco, while Kasteel Amerongen is 26 miles from the property. The nearest airport is Schiphol Airport, 45 miles from the accommodation.`,
       HotelImages: {
         create: [
-          { url: 'localhost:5000/images/5-1.jpg' },
-          { url: 'localhost:5000/images/5-2.jpg' },
-          { url: 'localhost:5000/images/5-3.jpg' },
+          { url: '/images/5-1.jpg' },
+          { url: '/images/5-2.jpg' },
+          { url: '/images/5-3.jpg' },
         ],
       },
       rooms: {
@@ -323,9 +323,9 @@ async function main() {
       Guests can work up a sweat in the on-site fitness center. The business center is perfect for business travelers. The resort provides a variety of activities including paddle boarding, biking, and kayaking.`,
       HotelImages: {
         create: [
-          { url: 'localhost:5000/images/6-1.jpg' },
-          { url: 'localhost:5000/images/6-2.jpg' },
-          { url: 'localhost:5000/images/6-3.jpg' },
+          { url: '/images/6-1.jpg' },
+          { url: '/images/6-2.jpg' },
+          { url: '/images/6-3.jpg' },
         ],
       },
       rooms: {
