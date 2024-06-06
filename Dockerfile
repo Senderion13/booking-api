@@ -1,11 +1,23 @@
-FROM node:lts-alpine
-ENV NODE_ENV=production
-WORKDIR /usr/src/app
+FROM node:lts-alpine AS builder
+
+WORKDIR /app
+
 COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
-RUN npm install --production --silent && mv node_modules ../
-COPY . .
-EXPOSE 5000
-RUN chown -R node /usr/src/app
+COPY tsconfig*.json ./
+COPY prisma ./prisma/
+
+RUN npm install --production --silent
 RUN npx prisma generate
-USER node
-CMD ["npm", "run", "start:dev"]
+COPY . .
+RUN npm run build
+
+FROM node:lts-alpine
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+
+EXPOSE 5000
+
+CMD ["npm", "run", "start:migrate:prod"]

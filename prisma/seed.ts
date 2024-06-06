@@ -194,7 +194,7 @@ async function main() {
   await prisma.hotel.create({
     data: {
       title: 'Hotel_Residence_Foch',
-      location: 'Paris',
+      location: 'New_York',
       rating: 8.2,
       description: `All the guest rooms at Residence Foch are individually decorated and air-conditioned. The wooden furnishings give them a cozy feel. They come with a flat-screen TV and free Wi-Fi access. There is also a courtesy tray, a mini-bar and a private bathroom. Unlimited international phone calls are available in this property.
 
@@ -253,7 +253,7 @@ async function main() {
   await prisma.hotel.create({
     data: {
       title: 'Casaprisco',
-      location: 'Putten',
+      location: 'Destin',
       rating: 7.1,
       description: `Providing a garden, Casaprisco provides accommodations in Putten. The property is around 20 miles from Apenheul Primate Park, 23 miles from Huis Doorn, and 29 miles from Dinoland Zwolle. There's a sun terrace and guests have access to free Wifi, free private parking, and an electric vehicle charging station.
 
