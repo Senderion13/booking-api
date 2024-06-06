@@ -32,7 +32,8 @@
     "class-validator": "^0.14.1",
     "express": "^4.19.2",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@nestjs/schematics": "^10.0.0",
